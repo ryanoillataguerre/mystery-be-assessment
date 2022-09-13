@@ -3,7 +3,13 @@ import path from "path";
 
 export class LoanOffer extends Model {
 	id?: string;
-	name?: string;
+	user_id?: string;
+	loan_application_id?: string;
+	apr?: number;
+	monthly_payment?: number;
+	term_length_months?: number;
+	accept?: boolean;
+	reasons?: string[];
 
 	static tableName: string = "loan_offers";
 
@@ -21,7 +27,7 @@ export class LoanOffer extends Model {
 			monthly_payment: { type: ["number", "null"] },
 			term_length_months: { type: ["number", "null"] },
 			accept: { type: "boolean" },
-			reasons: { type: ["object", "null"] },
+			reasons: { type: ["array", "null"] },
 		},
 	};
 

@@ -1,4 +1,4 @@
-import { BadRequestError } from "../errors";
+import { BadRequestError } from "../modules/errors";
 import { Request } from "express";
 import { Result, ValidationError, validationResult } from "express-validator";
 

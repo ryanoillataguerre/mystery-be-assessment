@@ -1,6 +1,7 @@
 import express, { Request, Response, NextFunction } from "express";
 import helmet from "helmet";
 import http from "http";
+import router from "./api";
 import { dbConnect } from "./db";
 import { errorHandler, morganLogger } from "./utils";
 
@@ -28,7 +29,8 @@ app.use(
 	"/",
 	express.json({
 		limit: "50mb",
-	})
+	}),
+	router
 );
 
 app.get("/health", (_: Request, res: Response) =>

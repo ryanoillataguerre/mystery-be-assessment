@@ -3,7 +3,7 @@ import {
 	UnauthorizedError,
 	NotFoundError,
 	UnprocessableEntityError,
-} from "../../errors";
+} from "../../modules/errors";
 import { NextFunction, Request, Response } from "express";
 
 export const errorHandler = (
@@ -26,15 +26,15 @@ export const errorHandler = (
 	};
 
 	if (error instanceof NotFoundError) {
-		return res.status(Number(error.code || 404)).send(response);
+		res.status(Number(error.code || 404)).send(response);
 	}
 
 	if (error instanceof BadRequestError) {
-		return res.status(Number(error.code || 400)).send(response);
+		res.status(Number(error.code || 400)).send(response);
 	}
 
 	if (error instanceof UnauthorizedError) {
-		return res.status(Number(error.code || 401)).send(response);
+		res.status(Number(error.code || 401)).send(response);
 	}
 
 	if (error instanceof UnprocessableEntityError) {

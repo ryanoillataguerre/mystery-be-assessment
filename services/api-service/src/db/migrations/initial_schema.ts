@@ -8,13 +8,13 @@ export async function up(knex: Knex): Promise<void> {
 		})
 		.createTable("loan_applications", (table: Knex.TableBuilder) => {
 			table.string("id").primary();
-			table.string("name").nullable();
 			table
 				.string("user_id")
 				.references("id")
 				.inTable("users")
 				.onDelete("CASCADE")
 				.index();
+			table.string("status").notNullable();
 			table.integer("credit_score").notNullable();
 			table.integer("monthly_debt").notNullable();
 			table.integer("monthly_income").notNullable();
@@ -46,7 +46,7 @@ export async function up(knex: Knex): Promise<void> {
 
 export async function down(knex: Knex): Promise<void> {
 	await knex.schema
-		.dropTableIfExists("users")
+		.dropTableIfExists("loan_offers")
 		.dropTableIfExists("loan_applications")
-		.dropTableIfExists("loan_offers");
+		.dropTableIfExists("users");
 }
