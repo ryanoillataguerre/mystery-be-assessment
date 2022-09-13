@@ -1,0 +1,17 @@
+FROM node:16
+
+RUN apt update
+
+WORKDIR /app
+
+COPY package.json ./
+COPY yarn.lock ./
+COPY services/api-service ./services/api-service
+
+RUN yarn
+RUN yarn global add agentkeepalive
+RUN yarn global add
+
+EXPOSE 8080
+
+CMD ["yarn", "dev"]

@@ -1,0 +1,40 @@
+version: "3.8"
+services:
+  postgres:
+    image: postgres:10.5
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    logging:
+      driver: none
+    ports:
+      - "5438:5432"
+    networks:
+      - dev
+    volumes:
+      - tenet-postgres-data:/var/lib/postgresql/data
+  api-service:
+    networks:
+      - dev
+    privileged: true
+    volumes:
+      - ./services/api-service/src:/app/services/api-service/src
+    working_dir: /app/services/api-service
+    build:
+      context: .
+      dockerfile: ./services/api-service/Dockerfile.local
+    ports:
+      - 8080:${SERVER_PORT}
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      SERVER_PORT: ${SERVER_PORT}
+      POSTGRES_DB_URL: ${POSTGRES_DB_URL}
+    depends_on:
+      - postgres
+      - redis
+networks:
+  dev:
+    driver: bridge
+volumes:
+  tenet-postgres-data: {}
