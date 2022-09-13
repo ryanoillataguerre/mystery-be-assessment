@@ -9,7 +9,8 @@ import {
 	UserInterface,
 	UserRelationMapping,
 } from "../db";
-import { BadRequestError } from "../modules/errors";
+import { submitApplication } from "../modules/applications";
+import { BadRequestError, NotFoundError } from "../modules/errors";
 import { handleValidationErrors } from "../utils";
 
 const router: Router = Router();
@@ -140,6 +141,31 @@ router.delete(
 					success: true,
 				},
 			});
+		} catch (err) {
+			next(err);
+		}
+	}
+);
+
+// Submit user's application
+router.post(
+	"/:user_id/application/submit",
+	[param("user_id").isString().exists()],
+	async (req: Request, res: Response, next: NextFunction) => {
+		try {
+			handleValidationErrors(req);
+			const application = await LoanApplication.query().findOne({
+				user_id: req.params.user_id,
+				status: LoanApplicationStatus.Active,
+			});
+			if (!application) {
+				throw new NotFoundError("Loan Application not found for user");
+			} else {
+				const data = await submitApplication(application.id as string);
+				res.status(200).send({
+					data,
+				});
+			}
 		} catch (err) {
 			next(err);
 		}

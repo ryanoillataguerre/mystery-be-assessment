@@ -6,20 +6,20 @@ import {
 	LoanOffer,
 	LoanOfferInterface,
 } from "../db";
-import { BadRequestError, NotFoundError } from "./errors";
+import { NotFoundError } from "./errors";
 
 const retrieveAPRFromApplication = (
 	application: LoanApplication
 ): number | boolean => {
 	const crScore = application.credit_score as number;
 	if (crScore >= 780) {
-		return 2;
+		return 0.02;
 	}
 	if (crScore >= 720) {
-		return 5;
+		return 0.05;
 	}
 	if (crScore >= 660) {
-		return 8;
+		return 0.08;
 	}
 	return false;
 };
@@ -59,7 +59,7 @@ export const submitApplication = async (application_id: string) => {
 	}
 	// Calculate loan offer monthly payment
 	const monthlyPayment = pmt(
-		Number(apr) / 100 / 12,
+		Number(apr) / 12,
 		newLoanOffer.term_length_months as number,
 		application.loan_amount as number
 	);
@@ -84,7 +84,7 @@ export const submitApplication = async (application_id: string) => {
 		newLoanOffer.reasons = rejectionReasons;
 	} else {
 		newLoanOffer.apr = Number(apr);
-		newLoanOffer.monthly_payment = Math.round(-monthlyPayment);
+		newLoanOffer.monthly_payment = (-monthlyPayment * 100) / 100;
 		newLoanOffer.accept = true;
 	}
 

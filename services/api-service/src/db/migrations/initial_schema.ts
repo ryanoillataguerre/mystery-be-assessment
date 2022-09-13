@@ -36,8 +36,8 @@ export async function up(knex: Knex): Promise<void> {
 				.references("id")
 				.inTable("loan_applications")
 				.index();
-			table.integer("apr").nullable();
-			table.integer("monthly_payment").nullable();
+			table.float("apr").nullable();
+			table.float("monthly_payment").nullable();
 			table.integer("term_length_months").nullable();
 			table.boolean("accept").nullable();
 			table.jsonb("reasons").nullable();
