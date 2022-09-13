@@ -6,7 +6,10 @@ import {
 	LoanApplicationStatus,
 } from "../db";
 import { BadRequestError } from "../modules/errors";
-import { submitApplication } from "../modules/applications";
+import {
+	deleteApplicationById,
+	submitApplication,
+} from "../modules/applications";
 import { handleValidationErrors } from "../utils";
 
 const router: Router = Router();
@@ -66,11 +69,7 @@ router.delete(
 		try {
 			handleValidationErrors(req);
 			if (req.params?.application_id) {
-				await LoanApplication.query()
-					.findById(req.params.application_id)
-					.patch({
-						status: LoanApplicationStatus.Inactive,
-					});
+				await deleteApplicationById(req.params?.application_id);
 			}
 
 			res.status(200).send({

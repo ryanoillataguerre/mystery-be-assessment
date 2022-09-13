@@ -91,3 +91,9 @@ export const submitApplication = async (application_id: string) => {
 	const newOffer = await LoanOffer.query().insertAndFetch(newLoanOffer);
 	return newOffer;
 };
+
+export const deleteApplicationById = async (application_id: string) => {
+	return await LoanApplication.query().findById(application_id).patch({
+		status: LoanApplicationStatus.Inactive,
+	});
+};

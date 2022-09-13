@@ -9,7 +9,10 @@ import {
 	UserInterface,
 	UserRelationMapping,
 } from "../db";
-import { submitApplication } from "../modules/applications";
+import {
+	deleteApplicationById,
+	submitApplication,
+} from "../modules/applications";
 import { BadRequestError, NotFoundError } from "../modules/errors";
 import { handleValidationErrors } from "../utils";
 
@@ -130,9 +133,7 @@ router.delete(
 				});
 
 				if (userActiveApp) {
-					await userActiveApp.$query().patch({
-						status: LoanApplicationStatus.Inactive,
-					});
+					await deleteApplicationById(userActiveApp.id as string);
 				}
 			}
 
@@ -182,7 +183,7 @@ router.post(
 			if (req.body?.id) {
 				const existingUser = await User.query().findById(req.body?.id);
 				if (existingUser) {
-					throw new BadRequestError("User with ID already exists");
+					throw new BadRequestError("User with that ID already exists");
 				}
 			}
 			const newUser: UserInterface = {
