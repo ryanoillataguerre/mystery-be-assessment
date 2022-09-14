@@ -13,7 +13,7 @@ services:
     networks:
       - dev
     volumes:
-      - tenet-postgres-data:/var/lib/postgresql/data
+      - mystery-postgres-data:/var/lib/postgresql/data
   api-service:
     networks:
       - dev
@@ -37,4 +37,4 @@ networks:
   dev:
     driver: bridge
 volumes:
-  tenet-postgres-data: {}
+  mystery-postgres-data: {}

@@ -1,8 +1,8 @@
 {
-	"name": "tenet-assessment",
+	"name": "mystery-assessment",
 	"version": "0.0.1",
 	"main": "index.js",
-	"repository": "git@github.com:ryanoillataguerre/tenet-assessment.git",
+	"repository": "git@github.com:ryanoillataguerre/mystery-assessment.git",
 	"author": "Ryan Oillataguerre",
 	"license": "UNLICENSED",
 	"private": true,
