@@ -11,6 +11,7 @@ import {
 } from "../db";
 import {
 	deleteApplicationById,
+	patchApplication,
 	submitApplication,
 } from "../modules/applications";
 import { BadRequestError, NotFoundError } from "../modules/errors";
@@ -86,32 +87,21 @@ router.patch(
 	async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			handleValidationErrors(req);
-			if (req.params?.user_id) {
-				const userActiveApp = await LoanApplication.query().findOne({
-					user_id: req.params.user_id,
-					status: LoanApplicationStatus.Active,
+			const userActiveApp = await LoanApplication.query().findOne({
+				user_id: req.params.user_id,
+				status: LoanApplicationStatus.Active,
+			});
+
+			if (userActiveApp) {
+				const response = await patchApplication(
+					userActiveApp.id as string,
+					req.body
+				);
+				res.status(200).send({
+					data: response,
 				});
-
-				let updates: LoanApplicationInterface = {};
-
-				if (userActiveApp) {
-					for (const updateKey of Object.keys(req.body)) {
-						// @ts-ignore - wouldn't normally do this but don't want to spend too much time debugging
-						updates[updateKey] = req.body[updateKey];
-					}
-				}
-
-				if (Object.keys(updates).length) {
-					const app = await LoanApplication.query().patchAndFetchById(
-						userActiveApp?.id as string,
-						updates
-					);
-					res.status(200).send({
-						data: app,
-					});
-				}
 			} else {
-				throw new BadRequestError("user_id is required");
+				throw new NotFoundError("No Application found for user");
 			}
 		} catch (err) {
 			next(err);

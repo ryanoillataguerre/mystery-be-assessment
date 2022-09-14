@@ -8,6 +8,7 @@ import {
 import { BadRequestError } from "../modules/errors";
 import {
 	deleteApplicationById,
+	patchApplication,
 	submitApplication,
 } from "../modules/applications";
 import { handleValidationErrors } from "../utils";
@@ -29,32 +30,14 @@ router.patch(
 	async (req: Request, res: Response, next: NextFunction) => {
 		try {
 			handleValidationErrors(req);
-			if (req.params?.application_id) {
-				const userActiveApp = await LoanApplication.query().findOne({
-					status: LoanApplicationStatus.Active,
-				});
 
-				let updates: LoanApplicationInterface = {};
-
-				if (userActiveApp) {
-					for (const updateKey of Object.keys(req.body)) {
-						// @ts-ignore - wouldn't normally do this but don't want to spend too much time debugging
-						updates[updateKey] = req.body[updateKey];
-					}
-				}
-
-				if (Object.keys(updates).length) {
-					const app = await LoanApplication.query().patchAndFetchById(
-						userActiveApp?.id as string,
-						updates
-					);
-					res.status(200).send({
-						data: app,
-					});
-				}
-			} else {
-				throw new BadRequestError("user_id is required");
-			}
+			const response = await patchApplication(
+				req.params?.application_id,
+				req.body
+			);
+			res.status(200).send({
+				data: response,
+			});
 		} catch (err) {
 			next(err);
 		}

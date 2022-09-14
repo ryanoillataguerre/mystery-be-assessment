@@ -2,6 +2,7 @@ import { randomUUID } from "crypto";
 import { pmt } from "financial";
 import {
 	LoanApplication,
+	LoanApplicationInterface,
 	LoanApplicationStatus,
 	LoanOffer,
 	LoanOfferInterface,
@@ -96,4 +97,28 @@ export const deleteApplicationById = async (application_id: string) => {
 	return await LoanApplication.query().findById(application_id).patch({
 		status: LoanApplicationStatus.Inactive,
 	});
+};
+
+export const patchApplication = async (
+	application_id: string,
+	updates: Partial<LoanApplicationInterface>
+) => {
+	const application = await LoanApplication.query().findById(application_id);
+	let newUpdates: LoanApplicationInterface = {};
+
+	if (application) {
+		for (const updateKey of Object.keys(updates)) {
+			// @ts-ignore - wouldn't normally do this but don't want to spend too much time debugging
+			newUpdates[updateKey] = updates[updateKey];
+		}
+	}
+
+	if (Object.keys(newUpdates).length) {
+		const app = await LoanApplication.query().patchAndFetchById(
+			application_id as string,
+			updates
+		);
+		return app;
+	}
+	return application;
 };
