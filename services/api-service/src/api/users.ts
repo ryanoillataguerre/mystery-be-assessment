@@ -46,25 +46,28 @@ router.post(
 					"User already has an active application, ID: " +
 						activeUserApp?.[0]?.id
 				);
+			} else {
+				const newApplication: LoanApplicationInterface = {
+					id: randomUUID(),
+					user_id: params.user_id,
+					credit_score: body.credit_score,
+					monthly_income: body.monthly_income,
+					monthly_debt: body.monthly_debt,
+					bankruptcies: body.bankruptcies,
+					delinquencies: body.delinquencies,
+					vehicle_value: body.vehicle_value,
+					loan_amount: body.loan_amount,
+					status: LoanApplicationStatus.Active,
+				};
+
+				const app = await LoanApplication.query().insertAndFetch(
+					newApplication
+				);
+
+				res.status(200).send({
+					data: app,
+				});
 			}
-			const newApplication: LoanApplicationInterface = {
-				id: randomUUID(),
-				user_id: params.user_id,
-				credit_score: body.credit_score,
-				monthly_income: body.monthly_income,
-				monthly_debt: body.monthly_debt,
-				bankruptcies: body.bankruptcies,
-				delinquencies: body.delinquencies,
-				vehicle_value: body.vehicle_value,
-				loan_amount: body.loan_amount,
-				status: LoanApplicationStatus.Active,
-			};
-
-			const app = await LoanApplication.query().insertAndFetch(newApplication);
-
-			res.status(200).send({
-				data: app,
-			});
 		} catch (err) {
 			next(err);
 		}

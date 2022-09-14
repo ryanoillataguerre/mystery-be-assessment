@@ -26,19 +26,19 @@ export const errorHandler = (
 	};
 
 	if (error instanceof NotFoundError) {
-		res.status(Number(error.code || 404)).send(response);
+		return res.status(Number(error.code || 404)).send(response);
 	}
 
 	if (error instanceof BadRequestError) {
-		res.status(Number(error.code || 400)).send(response);
+		return res.status(Number(error.code || 400)).send(response);
 	}
 
 	if (error instanceof UnauthorizedError) {
-		res.status(Number(error.code || 401)).send(response);
+		return res.status(Number(error.code || 401)).send(response);
 	}
 
 	if (error instanceof UnprocessableEntityError) {
-		res.status(422).send(response);
+		return res.status(422).send(response);
 	}
 
 	return res.status(500).send(response);
