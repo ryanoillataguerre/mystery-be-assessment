@@ -12,7 +12,3 @@ I made this "Mystery" in case any one happened to look up the company name + ass
 - Run `yarn run migrate:latest` in `services/api-service` once DB container is running (only necessary once to migrate the DB schema)
 - Test routes at root URL `http://localhost:8080/`
 - You can import the Insomnia collection attached in the insomnia/ directory, assuming you're using Insomnia as your REST client
-
-### Organization
-
-- `services/` is usually a folder of microservices, but in this case just the one `api-service`. I still kept this organization for ease of addition and because I don't see any benefits gained by moving the folder structure "up a level"
